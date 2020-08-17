@@ -20,3 +20,4 @@
 -- Create database following (this tutorial)[https://medium.com/better-programming/connect-from-local-machine-to-postgresql-docker-container-f785f00461a7]
 -- Connect to the database (i used dbeaver) with localhost:5432
 
+
