@@ -17,9 +17,11 @@ router.get("/:id", async (req, res) => {
 });
 
 router.post("/", async (req, res) => {
+  console.log(req.body);
   const {
     body: { author, text, server, tech },
   } = req;
+
 
   if (!author || !text || !server || !tech) {
     res.status(422).send("author, text, server, and tech are required");

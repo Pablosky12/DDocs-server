@@ -8,12 +8,12 @@ const mountRoutes = require("./routes");
 
 const app = express();
 app.use(Sentry.Handlers.requestHandler());
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
 mountRoutes(app);
 
 app.use(Sentry.Handlers.errorHandler());
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
 
 app.listen(process.env.PORT || 3000, () => {
   console.log("Server Started Correctly");
