@@ -1,4 +1,5 @@
 import "dotenv/config";
+import * as Sentry from '@sentry/node';
 
 Sentry.init({ dsn: 'https://2212f7d470844761a77920ea9eb6f89c@o435411.ingest.sentry.io/5394671' });
 
