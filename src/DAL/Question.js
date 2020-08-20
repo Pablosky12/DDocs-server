@@ -11,7 +11,7 @@ function getById(id) {
 }
 
 function getByUserId(id) {
-  return db.query("SELECT * FROM main.questions WHERE local_user = $1;", [id]);
+  return db.query("SELECT * FROM main.questions WHERE discord_user = $1;", [id]);
 }
 
 function getLatest() {
@@ -28,7 +28,7 @@ function getByTech(techId) {
 function create({ author, text, server, tech }) {
   return db.query(
     `INSERT INTO main.questions
-    (local_user, question_text, discord_server, tech)
+    (discord_user, question_text, discord_server, tech)
     VALUES($1, $2, $3, $4)
     RETURNING id;`,
     [author, text, server, tech]

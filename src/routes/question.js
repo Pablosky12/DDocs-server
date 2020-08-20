@@ -17,7 +17,6 @@ router.get("/:id", async (req, res) => {
 });
 
 router.post("/", async (req, res) => {
-  console.log(req.body);
   const {
     body: { author, text, server, tech },
   } = req;
@@ -32,6 +31,7 @@ router.post("/", async (req, res) => {
     const { rows } = await Question.create({ author, text, server, tech });
     res.status(200).send(rows[0]);
   } catch (e) {
+    console.log(e);
     return res.status(500).send(e);
   }
 });
