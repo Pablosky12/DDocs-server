@@ -18,10 +18,10 @@ router.get("/user/:id", async (req, res) => {
 
 router.post("/", async (req, res) => {
   const {
-    body: { author, text, server, tech, questionId },
+    body: { author, text, server, tech, questionId, questionDiscordMsgId},
   } = req;
 
-  if (!author || !text || !server || !tech || !questionId) {
+  if (!author || !text || !server || !tech || !questionId || !questionDiscordMsgId) {
     res
       .status(422)
       .send("author, text, server, questionId and tech are required");
@@ -35,6 +35,7 @@ router.post("/", async (req, res) => {
       server,
       tech,
       questionId,
+      questionDiscordMsgId
     });
     res.status(200).send(rows[0]);
   } catch (e) {

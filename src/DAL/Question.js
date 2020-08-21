@@ -10,6 +10,16 @@ function getById(id) {
   );
 }
 
+function getByDiscordId(id) {
+  return db.query(
+   `SELECT * FROM main.questions 
+    JOIN answers 
+      on questions.discord_msg_id  = answers.question_discord_msg_id  
+    WHERE main.questions.discord_msg_id = $1;`,
+    [id]
+  );
+}
+
 function getByUserId(id) {
   return db.query("SELECT * FROM main.questions WHERE discord_user = $1;", [id]);
 }
@@ -25,13 +35,13 @@ function getByTech(techId) {
   );
 }
 
-function create({ author, text, server, tech }) {
+function create({ author, text, server, tech, discordMsgId }) {
   return db.query(
     `INSERT INTO main.questions
-    (discord_user, question_text, discord_server, tech)
-    VALUES($1, $2, $3, $4)
+    (discord_user, question_text, discord_server, tech, discord_msg_id)
+    VALUES($1, $2, $3, $4, $5)
     RETURNING id;`,
-    [author, text, server, tech]
+    [author, text, server, tech, discordMsgId]
   );
 }
 
@@ -41,4 +51,5 @@ module.exports = {
   getByTech,
   create,
   getLatest,
+  getByDiscordId
 };
