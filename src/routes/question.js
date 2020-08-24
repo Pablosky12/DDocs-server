@@ -15,6 +15,18 @@ router.get("/:id", async (req, res) => {
     res.status(404).send(`No question found with id ${id}`);
   }
 });
+
+//This is awful, just keeping it to move forward with the POC
+router.post("/query", async (req, res) => {
+  const { text } = req.params;
+  const { rows } = await Question.getByExactText(text);
+  if (rows.length) {
+    res.send(rows[0]);
+  } else {
+    res.status(404).send(`No question found with discord provided text`);
+  }
+});
+
 router.get("/discord/:id", async (req, res) => {
   const { id } = req.params;
   const { rows } = await Question.getByDiscordId(id);
