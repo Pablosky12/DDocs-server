@@ -3,7 +3,7 @@ const db = require("./db");
 function getById(id) {
   return db.query(
     `SELECT * FROM main.questions 
-    JOIN answers 
+    LEFT JOIN answers 
       on questions.id  = answers.question_id
     WHERE main.questions.id = $1;`,
     [id]
@@ -13,7 +13,7 @@ function getById(id) {
 function getByDiscordId(id) {
   return db.query(
     `SELECT * FROM main.questions 
-    JOIN answers 
+    LEFT JOIN answers 
       on questions.discord_msg_id  = answers.question_discord_msg_id  
     WHERE main.questions.discord_msg_id = $1;`,
     [id]
@@ -22,8 +22,13 @@ function getByDiscordId(id) {
 
 function getByExactText(text) {
   return db.query(
-    `SELECT * FROM main.questions q 
-    JOIN main.answers a
+    `SELECT q.id as qId,
+    q.discord_user as qDiscordUser,
+    q.question_text as qText, 
+    q.discord_server as qDiscordServer,
+    q.tech as qTech,
+    discord_msg_id  as qDiscordMsgId FROM main.questions q 
+    LEFT JOIN main.answers a
     ON q.discord_msg_id = a.question_discord_msg_id
     WHERE q.question_text=$1
     ORDER BY q.created_on ASC LIMIT 1;`,

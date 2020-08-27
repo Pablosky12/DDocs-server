@@ -16,18 +16,6 @@ router.get("/:id", async (req, res) => {
   }
 });
 
-//This is awful, just keeping it to move forward with the POC
-router.post("/query", async (req, res) => {
-  const { text } = req.body;
-  const { rows } = await Question.getByExactText(text);
-
-  console.log(text);
-  if (rows.length) {
-    res.send(rows[0]);
-  } else {
-    res.status(404).send(`No question found with discord provided text`);
-  }
-});
 
 router.get("/discord/:id", async (req, res) => {
   const { id } = req.params;
@@ -40,6 +28,7 @@ router.get("/discord/:id", async (req, res) => {
 });
 
 router.post("/", async (req, res) => {
+
   const {
     body: { author, text, server, tech, discordMsgId},
   } = req;
@@ -56,5 +45,17 @@ router.post("/", async (req, res) => {
   } catch (e) {
     console.log(e);
     return res.status(500).send(e);
+  }
+});
+
+//This is awful, just keeping it to move forward with the POC
+router.post("/query", async (req, res) => {
+  const { text } = req.body;
+  const { rows } = await Question.getByExactText(text);
+
+  if (rows.length) {
+    res.send(rows[0]);
+  } else {
+    res.status(404).send(`No question found with discord provided text`);
   }
 });
