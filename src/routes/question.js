@@ -1,21 +1,41 @@
 const { Question } = require("../DAL");
 const Router = require("express-promise-router");
+const { mapper } = require("./utils");
 
 const router = new Router();
 
 module.exports = router;
+
+const questionMapping = {
+  id: "id",
+  discord_user: "discordUser",
+  question_text: "text",
+  created_on: "createdOn",
+  discord_server: "server",
+  tech: "tech",
+  discord_msg_id: "discordMessageId",
+};
+
+const answerMapping = {
+  answer_text: "text",
+  question_id: "questionId",
+  id: 'id',
+};
+
 
 // Get Question By Id
 router.get("/:id", async (req, res) => {
   const { id } = req.params;
   const { rows } = await Question.getById(id);
   if (rows.length) {
-    res.send(rows[0]);
+    const question = mapper(rows[0], questionMapping);
+    const answers = rows.map((ans) => mapper(ans, answerMapping));
+
+    res.send({ ...question, answers });
   } else {
     res.status(404).send(`No question found with id ${id}`);
   }
 });
-
 
 router.get("/discord/:id", async (req, res) => {
   const { id } = req.params;
@@ -28,19 +48,25 @@ router.get("/discord/:id", async (req, res) => {
 });
 
 router.post("/", async (req, res) => {
-
   const {
-    body: { author, text, server, tech, discordMsgId},
+    body: { author, text, server, tech, discordMsgId },
   } = req;
 
-
   if (!author || !text || !server || !tech || !discordMsgId) {
-    res.status(422).send("author, text, server, discordMsgId, and tech are required");
+    res
+      .status(422)
+      .send("author, text, server, discordMsgId, and tech are required");
     return;
   }
 
   try {
-    const { rows } = await Question.create({ author, text, server, tech, discordMsgId });
+    const { rows } = await Question.create({
+      author,
+      text,
+      server,
+      tech,
+      discordMsgId,
+    });
     res.status(200).send(rows[0]);
   } catch (e) {
     console.log(e);
