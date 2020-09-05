@@ -43,7 +43,10 @@ function getByUserId(id) {
 }
 
 function getLatest() {
-  return db.query("SELECT * FROM main.questions FETCH FIRST 200 ROWS ONLY;");
+  return db.query(`select *,
+  count(*) over () as total
+  from main.questions q
+  limit 200;`);
 }
 
 function getByTech(techId) {

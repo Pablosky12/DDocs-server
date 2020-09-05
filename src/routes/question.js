@@ -19,9 +19,18 @@ const questionMapping = {
 const answerMapping = {
   answer_text: "text",
   question_id: "questionId",
-  id: 'id',
+  id: "id",
 };
 
+// Get Latest Questions
+router.get("/", async (req, res) => {
+  const { rows } = await Question.getLatest();
+  if (rows.length) {
+    const questions = rows.map((row) => mapper(row, questionMapping));
+    const total = rows[0].total;
+    res.send({ questions, total });
+  }
+});
 
 // Get Question By Id
 router.get("/:id", async (req, res) => {
