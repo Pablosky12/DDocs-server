@@ -5,9 +5,11 @@ Sentry.init({ dsn: 'https://2212f7d470844761a77920ea9eb6f89c@o435411.ingest.sent
 
 const express = require("express");
 const mountRoutes = require("./routes");
+const cors = require("cors");
 
 const app = express();
 app.use(Sentry.Handlers.requestHandler());
+app.use(cors())
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
