@@ -14,6 +14,7 @@ const questionMapping = {
   discord_server: "server",
   tech: "tech",
   discord_msg_id: "discordMessageId",
+  answer_count: "answerCount"
 };
 
 const answerMapping = {
@@ -23,7 +24,7 @@ const answerMapping = {
 };
 
 // Get Latest Questions
-router.get("/", async (req, res) => {
+router.get("/latest", async (req, res) => {
   const { rows } = await Question.getLatest();
   if (rows.length) {
     const questions = rows.map((row) => mapper(row, questionMapping));
@@ -38,8 +39,11 @@ router.get("/:id", async (req, res) => {
   const { rows } = await Question.getById(id);
   if (rows.length) {
     const question = mapper(rows[0], questionMapping);
-    const answers = rows.map((ans) => mapper(ans, answerMapping));
-
+    let answers = [];
+    if (rows.length > 1) {
+      answers = rows.map((ans) => mapper(ans, answerMapping));
+    }
+    
     res.send({ ...question, answers });
   } else {
     res.status(404).send(`No question found with id ${id}`);

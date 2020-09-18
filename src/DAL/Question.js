@@ -43,10 +43,21 @@ function getByUserId(id) {
 }
 
 function getLatest() {
-  return db.query(`select *,
-  count(*) over () as total
-  from main.questions q
-  limit 200;`);
+  return db.query(`select q.id as id,
+  q.discord_user as discord_user,
+  q.question_text as question_text,
+  q.created_on as created_on,
+  q.discord_server as discord_server,
+  q.tech as tech,
+  q.discord_msg_id as discord_msg_id,
+  count(q.id) over () as total,
+ count(a.question_id ) as answer_count
+ from main.questions q
+   left join main.answers a 
+   on q.id = a.question_id 
+ group by q.id
+ order by 1 desc 
+ limit 200;`);
 }
 
 function getByTech(techId) {
